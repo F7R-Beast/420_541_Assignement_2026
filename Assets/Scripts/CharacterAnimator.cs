@@ -27,6 +27,8 @@ public class CharacterAnimator : MonoBehaviour
 
         // Tell the Animator if we're on the ground (controls Falling)
         animator.SetBool("IsGrounded", movement.IsGrounded);
+
+        animator.SetBool("IsDoubleJumping", movement.IsDoubleJumping);
     }
 }
 

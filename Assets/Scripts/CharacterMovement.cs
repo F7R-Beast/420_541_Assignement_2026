@@ -25,12 +25,15 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 moveDirection;
     private bool isGrounded;
     private bool jumpRequested = false;
+    private bool isDoubleJumping = false;
 
     private bool isSprinting = false;
+    
 
     private int numOfDoubleJumpRemaining;
 
     public bool IsGrounded => isGrounded;
+    public bool IsDoubleJumping => isDoubleJumping;
 
     private void Start()
     {
@@ -62,19 +65,21 @@ public class CharacterMovement : MonoBehaviour
         moveDirection = (camRight * moveX + camForward * moveZ).normalized;
 
         // 3. Jump Input
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded && !isDoubleJumping)
         {
             jumpRequested = true;
         }else if(Input.GetButtonDown("Jump") && !isGrounded && numOfDoubleJumpRemaining > 0){
             jumpRequested = true;
+            isDoubleJumping = true;
             numOfDoubleJumpRemaining--;
         }
-
+        
         // 4. Sprint input
         isSprinting = Input.GetButton("Sprint");
         
         if(isGrounded){
             numOfDoubleJumpRemaining = numOfDoubleJumpTotal;
+            isDoubleJumping = false;
         }
     }
 
