@@ -29,6 +29,7 @@ public class CharacterAnimator : MonoBehaviour
         animator.SetBool("IsGrounded", movement.IsGrounded);
 
         animator.SetBool("IsDoubleJumping", movement.IsDoubleJumping);
+
     }
 }
 

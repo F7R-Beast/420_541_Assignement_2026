@@ -15,6 +15,7 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Jump Settings")]
     [SerializeField] private int numOfDoubleJumpTotal = 1;
+    [SerializeReference] private bool isDoubleJumping = false;
 
     [Header("Ground Check Settings")]
     [SerializeField] private float groundDistance = 0.5f;
@@ -25,7 +26,9 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 lookDirection;
     private bool isGrounded;
     private bool jumpRequested = false;
-    private bool isDoubleJumping = false;
+
+    private float doubleJumpTime = 0f;
+    
 
     private bool isSprinting = false;
     
@@ -81,6 +84,16 @@ public class CharacterMovement : MonoBehaviour
             jumpRequested = true;
             isDoubleJumping = true;
             numOfDoubleJumpRemaining--;
+            doubleJumpTime = 1.5f;
+        }
+
+        if (isDoubleJumping && doubleJumpTime > 0)
+        {
+            doubleJumpTime -= Time.deltaTime;
+        }
+        else
+        {
+            isDoubleJumping = false;
         }
         
         // 4. Sprint input
