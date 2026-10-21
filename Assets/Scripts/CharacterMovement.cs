@@ -4,9 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterMovement : MonoBehaviour
 {
-
-    [Header("Camera")]
-    [SerializeField] private Transform cameraTransform;
+    [Header("Charavter Settings")]
+    [SerializeField] private float turnSpeed = 720f;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 7f;
@@ -23,6 +22,7 @@ public class CharacterMovement : MonoBehaviour
 
     private Rigidbody rb;
     private Vector3 moveDirection;
+    private Vector3 lookDirection;
     private bool isGrounded;
     private bool jumpRequested = false;
     private bool isDoubleJumping = false;
@@ -37,9 +37,6 @@ public class CharacterMovement : MonoBehaviour
 
     private void Start()
     {
-        if (cameraTransform == null && Camera.main != null){
-            cameraTransform = Camera.main.transform;
-        }
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         numOfDoubleJumpRemaining = numOfDoubleJumpTotal;
@@ -55,14 +52,26 @@ public class CharacterMovement : MonoBehaviour
         float moveZ = Input.GetAxisRaw("Vertical"); 
 
         // Using the camera to decide where forward is
-        Vector3 camForward = cameraTransform.forward;
-        Vector3 camRight = cameraTransform.right;
+        Vector3 camForward = Camera.main.transform.forward;
+        
+        Vector3 camRight = Camera.main.transform.right;
         camForward.y = 0f;
         camRight.y = 0f;
         camForward.Normalize();
         camRight.Normalize();
 
+        lookDirection = camForward;
+
         moveDirection = (camRight * moveX + camForward * moveZ).normalized;
+
+        if (moveDirection.magnitude > 0.0f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection.normalized);
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation, 
+                targetRotation, 
+                turnSpeed * Time.deltaTime);
+        }
 
         // 3. Jump Input
         if (Input.GetButtonDown("Jump") && isGrounded && !isDoubleJumping)
