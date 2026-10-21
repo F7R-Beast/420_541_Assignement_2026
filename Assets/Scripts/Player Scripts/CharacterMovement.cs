@@ -15,7 +15,7 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Jump Settings")]
     [SerializeField] private int numOfDoubleJumpTotal = 1;
-    [SerializeReference] private bool isDoubleJumping = false;
+    
 
     [Header("Ground Check Settings")]
     [SerializeField] private float groundDistance = 0.5f;
@@ -34,7 +34,8 @@ public class CharacterMovement : MonoBehaviour
     
 
     private int numOfDoubleJumpRemaining;
-
+    private bool isDoubleJumping = false;
+    
     public bool IsGrounded => isGrounded;
     public bool IsDoubleJumping => isDoubleJumping;
 
