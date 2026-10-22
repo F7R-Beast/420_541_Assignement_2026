@@ -47,7 +47,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-
+        ScoreManager.Instance.RestartCurrentLevelScore();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
