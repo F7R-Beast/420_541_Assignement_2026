@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4946859250468977587}
   - component: {fileID: 2438527545436554858}
   - component: {fileID: 767357734144737871}
-  - component: {fileID: 4434397665945700323}
+  - component: {fileID: 7107377098681506154}
   m_Layer: 0
-  m_Name: Pickup
+  m_Name: ScoreCoin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -80,7 +80,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4434397665945700323
+--- !u!114 &7107377098681506154
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,8 +91,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59fe2648e7810844c95c4a59cafe78f7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  points: 10
+  m_EditorClassIdentifier: Assembly-CSharp::ScorePickup
+  points: 50
 --- !u!1 &765178741612684189
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +175,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0.79

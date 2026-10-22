@@ -28,7 +28,8 @@ public class CharacterMovement : MonoBehaviour
     private bool jumpRequested = false;
 
     private float doubleJumpTime = 0f;
-    
+    private float doubleJumpEndTime = 0f;
+    public bool CanDoubleJump => Time.time < doubleJumpEndTime;
 
     private bool isSprinting = false;
     
@@ -81,7 +82,7 @@ public class CharacterMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded && !isDoubleJumping)
         {
             jumpRequested = true;
-        }else if(Input.GetButtonDown("Jump") && !isGrounded && numOfDoubleJumpRemaining > 0){
+        }else if(Input.GetButtonDown("Jump") && !isGrounded && CanDoubleJump && numOfDoubleJumpRemaining > 0){
             jumpRequested = true;
             isDoubleJumping = true;
             numOfDoubleJumpRemaining--;
@@ -128,5 +129,10 @@ public class CharacterMovement : MonoBehaviour
     {
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+    }
+
+    public void EnableDoubleJump(float duration)
+    {
+        doubleJumpEndTime = Time.time + duration;
     }
 }

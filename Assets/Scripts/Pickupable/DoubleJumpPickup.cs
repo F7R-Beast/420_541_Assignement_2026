@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 
@@ -6,7 +7,11 @@ using UnityEngine;
 public class DoubleJumpPickup : MonoBehaviour
 {
     // How many points this coin is worth (change it in the Inspector)
+    [Header("Ability Settings")]
     [SerializeField] private int time = 30;
+
+    [Header("Pickable Ability Settings")]
+    [SerializeField] private float reappearCooldown = 30f;
 
 
     // Called automatically when something enters this trigger
@@ -15,12 +20,12 @@ public class DoubleJumpPickup : MonoBehaviour
         // Only react to the player, ignore everything else
         if (other.CompareTag("Player"))
         {
-            // Add our points through the ScoreManager singleton
-            ScoreManager.Instance.AddScore(points);
-
-
-            // Remove the coin from the scene: it's collected once and gone
-            Destroy(gameObject);
+            CharacterMovement player = other.GetComponentInParent<CharacterMovement>();
+            if (player != null) player.EnableDoubleJump(time);
         }
+
+        AbilityManager.Instance.DisableTemporarily(gameObject, reappearCooldown);
+        
     }
+
 }

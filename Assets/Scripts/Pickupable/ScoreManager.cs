@@ -6,6 +6,12 @@ using UnityEngine;
 // through ScoreManager.Instance.
 public class ScoreManager : MonoBehaviour
 {
+
+    private int scoreMultiplier = 2;
+
+    private float scoreBoostEndTime = 0f;
+    public bool ScoreBoostActive => Time.time < scoreBoostEndTime;
+
     // The single shared instance that any script can reach.
     // "static" means it belongs to the class, not to one object.
     public static ScoreManager Instance { get; private set; }
@@ -46,10 +52,21 @@ public class ScoreManager : MonoBehaviour
     // Called by coins when they're collected
     public void AddScore(int amount)
     {
+        if (ScoreBoostActive)
+        {
+            amount *= scoreMultiplier;
+        }
+
         Score += amount;
 
 
         // Print the new total to the Console window
         Debug.Log("Score: " + Score);
+    }
+
+    public void ActivateScoreBoost(float duration, int multiplier)
+    {
+        scoreBoostEndTime = Time.time + duration;
+        scoreMultiplier = multiplier;
     }
 }

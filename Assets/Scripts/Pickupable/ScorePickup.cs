@@ -6,7 +6,7 @@ using UnityEngine;
 public class ScorePickup : MonoBehaviour
 {
     // How many points this coin is worth (change it in the Inspector)
-    [SerializeField] private int points = 10;
+    [SerializeField] private int points = 50;
 
 
     // Called automatically when something enters this trigger
