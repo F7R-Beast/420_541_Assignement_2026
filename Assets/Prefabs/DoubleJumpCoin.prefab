@@ -94,6 +94,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DoubleJumpPickup
   time: 30
   reappearCooldown: 30
+  collectSound: {fileID: 8300000, guid: 25dc9d465f5f6274c8000f023f759050, type: 3}
+  volume: 1
 --- !u!1 &7865643902293991717
 GameObject:
   m_ObjectHideFlags: 0

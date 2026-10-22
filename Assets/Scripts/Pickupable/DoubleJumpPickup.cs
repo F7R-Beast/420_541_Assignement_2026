@@ -13,6 +13,10 @@ public class DoubleJumpPickup : MonoBehaviour
     [Header("Pickable Ability Settings")]
     [SerializeField] private float reappearCooldown = 30f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip collectSound;
+    [SerializeField, Range(0f, 1f)] private float volume = 1f;
+
 
     // Called automatically when something enters this trigger
     private void OnTriggerEnter(Collider other)
@@ -21,7 +25,11 @@ public class DoubleJumpPickup : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             CharacterMovement player = other.GetComponentInParent<CharacterMovement>();
-            if (player != null) player.EnableDoubleJump(time);
+            if (player != null){
+                player.EnableDoubleJump(time);
+                if (collectSound != null)
+                    AudioSource.PlayClipAtPoint(collectSound, transform.position, volume);
+            }
         }
 
         AbilityManager.Instance.DisableTemporarily(gameObject, reappearCooldown);

@@ -93,6 +93,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScorePickup
   points: 50
+  collectSound: {fileID: 8300000, guid: 46bc1e5a31cd52644b3238dd812bcc41, type: 3}
+  volume: 1
 --- !u!1 &765178741612684189
 GameObject:
   m_ObjectHideFlags: 0

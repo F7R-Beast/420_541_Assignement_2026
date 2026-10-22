@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
 {
+    [Header("Double Jump Sound")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip doubleJumpSound;
+
+    private bool wasDoubleJumping = false;
+
     private Animator animator;       // plays the animations
     private CharacterMovement movement; // our movement script (for IsGrounded)
     private Rigidbody rb;            // used to read how fast the player moves
@@ -28,8 +34,16 @@ public class CharacterAnimator : MonoBehaviour
         // Tell the Animator if we're on the ground (controls Falling)
         animator.SetBool("IsGrounded", movement.IsGrounded);
 
-        animator.SetBool("IsDoubleJumping", movement.IsDoubleJumping);
+        bool isDoubleJumping = movement.IsDoubleJumping;
+        animator.SetBool("IsDoubleJumping", isDoubleJumping);
 
+        if (isDoubleJumping && !wasDoubleJumping)
+        {
+            if (audioSource != null && doubleJumpSound != null)
+                audioSource.PlayOneShot(doubleJumpSound);
+        }
+
+        wasDoubleJumping = isDoubleJumping;
     }
 }
 

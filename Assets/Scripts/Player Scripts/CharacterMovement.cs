@@ -11,10 +11,13 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float sprintSpeedMultiplier = 2f;
     [SerializeField] private float defaultSpeed = 7f;
-    [SerializeField] private float jumpForce = 5f;
 
     [Header("Jump Settings")]
     [SerializeField] private int numOfDoubleJumpTotal = 1;
+    [SerializeField] private float minJumpForce = 3f;
+    [SerializeField] private float maxJumpForce = 9f;
+    [SerializeField] private float maxChargeTime = 3f;
+    [SerializeField] private float doubleJumpForce = 5f;
     
 
     [Header("Ground Check Settings")]
@@ -27,11 +30,17 @@ public class CharacterMovement : MonoBehaviour
     private bool isGrounded;
     private bool jumpRequested = false;
 
+    private bool isCharging = false;
+    private float chargeTime = 0f;
+    private float queuedJumpForce;
+
     private float doubleJumpTime = 0f;
     private float doubleJumpEndTime = 0f;
     public bool CanDoubleJump => Time.time < doubleJumpEndTime;
 
     private bool isSprinting = false;
+    private float speedBoostMultiplier = 1f;
+    private float speedBoostEndTime = 0f;
     
 
     private int numOfDoubleJumpRemaining;
@@ -79,14 +88,48 @@ public class CharacterMovement : MonoBehaviour
         }
 
         // 3. Jump Input
-        if (Input.GetButtonDown("Jump") && isGrounded && !isDoubleJumping)
+        if (Input.GetButtonDown("Jump"))
         {
-            jumpRequested = true;
-        }else if(Input.GetButtonDown("Jump") && !isGrounded && CanDoubleJump && numOfDoubleJumpRemaining > 0){
-            jumpRequested = true;
-            isDoubleJumping = true;
-            numOfDoubleJumpRemaining--;
-            doubleJumpTime = 1.5f;
+            if (isGrounded && !isDoubleJumping)
+            {
+                // Start charging
+                isCharging = true;
+                chargeTime = 0f;
+            }
+            else if (!isGrounded && CanDoubleJump && numOfDoubleJumpRemaining > 0)
+            {
+                queuedJumpForce = doubleJumpForce;
+                jumpRequested = true;
+                isDoubleJumping = true;
+                numOfDoubleJumpRemaining--;
+                doubleJumpTime = 1.5f;
+            }
+        }
+
+        if (isCharging)
+        {
+            if (!isGrounded)
+            {
+                isCharging = false;
+            }
+            else
+            {
+                chargeTime += Time.deltaTime;
+
+                if (chargeTime > maxChargeTime)
+                {
+                    chargeTime = maxChargeTime;
+                }
+
+                // Jump on release, or automatically at max charge time
+                if (Input.GetButtonUp("Jump") || chargeTime >= maxChargeTime)
+                {
+                    float percent = chargeTime / maxChargeTime;
+                    queuedJumpForce = minJumpForce + (maxJumpForce - minJumpForce) * percent;
+                    jumpRequested = true;
+                    isCharging = false;
+                }
+            }
         }
 
         if (isDoubleJumping && doubleJumpTime > 0)
@@ -113,26 +156,33 @@ public class CharacterMovement : MonoBehaviour
 
         if (jumpRequested)
         {
-            Jump();
+            Jump(queuedJumpForce);
             jumpRequested = false;
         }
     }
 
     private void MovePlayer()
     {
-        moveSpeed = isSprinting? defaultSpeed * sprintSpeedMultiplier: defaultSpeed;
+        float boost = Time.time < speedBoostEndTime ? speedBoostMultiplier : 1f;
+        moveSpeed = (isSprinting ? defaultSpeed * sprintSpeedMultiplier : defaultSpeed) * boost;
         Vector3 targetVelocity = moveDirection * moveSpeed;
         rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
     }
 
-    private void Jump()
+    private void Jump(float force)
     {
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+        rb.AddForce(Vector3.up * force, ForceMode.VelocityChange);
     }
 
     public void EnableDoubleJump(float duration)
     {
         doubleJumpEndTime = Time.time + duration;
+    }
+
+    public void ApplySpeedBoost(float multiplier, float duration)
+    {
+        speedBoostMultiplier = multiplier;
+        speedBoostEndTime = Time.time + duration;
     }
 }

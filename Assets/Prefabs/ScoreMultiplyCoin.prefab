@@ -95,6 +95,8 @@ MonoBehaviour:
   scoreMultipler: 2
   duration: 10
   reappearCooldown: 30
+  collectSound: {fileID: 8300000, guid: 25dc9d465f5f6274c8000f023f759050, type: 3}
+  volume: 1
 --- !u!1 &2038496642383995983
 GameObject:
   m_ObjectHideFlags: 0

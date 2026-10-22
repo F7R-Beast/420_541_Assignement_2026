@@ -8,6 +8,9 @@ public class ScorePickup : MonoBehaviour
     // How many points this coin is worth (change it in the Inspector)
     [SerializeField] private int points = 50;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip collectSound;
+    [SerializeField, Range(0f, 1f)] private float volume = 1f;
 
     // Called automatically when something enters this trigger
     private void OnTriggerEnter(Collider other)
@@ -15,6 +18,9 @@ public class ScorePickup : MonoBehaviour
         // Only react to the player, ignore everything else
         if (other.CompareTag("Player"))
         {
+            if (collectSound != null)
+                AudioSource.PlayClipAtPoint(collectSound, transform.position, volume);
+
             // Add our points through the ScoreManager singleton
             ScoreManager.Instance.AddScore(points);
 

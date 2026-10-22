@@ -11,7 +11,6 @@ public class LevelEndTrigger : MonoBehaviour
     if (!other.CompareTag("Player")) return;
 
     ScoreManager.Instance.setLastLevelFinalScore();
-
     SceneManager.LoadScene(nextScene);
 }
 }

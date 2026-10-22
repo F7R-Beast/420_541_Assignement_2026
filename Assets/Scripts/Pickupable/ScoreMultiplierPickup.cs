@@ -14,6 +14,10 @@ public class ScoreMultiplierPickup : MonoBehaviour
     [Header("Pickable Ability Settings")]
     [SerializeField] private float reappearCooldown = 30f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip collectSound;
+    [SerializeField, Range(0f, 1f)] private float volume = 1f;
+
 
     // Called automatically when something enters this trigger
     private void OnTriggerEnter(Collider other)
@@ -21,6 +25,8 @@ public class ScoreMultiplierPickup : MonoBehaviour
         // Only react to the player, ignore everything else
         if (other.CompareTag("Player"))
         {
+            if (collectSound != null)
+                AudioSource.PlayClipAtPoint(collectSound, transform.position, volume);
             ScoreManager.Instance.ActivateScoreBoost(duration, scoreMultipler);
         }
 
